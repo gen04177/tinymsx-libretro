@@ -19,7 +19,7 @@ main (int argc, char *argv[])
 {
   const int SCREEN_WIDTH = 284;
   const int SCREEN_HEIGHT = 240;
-  const int SCALE = 2;
+  const int SCALE = 1;
 
   SDL_Init (SDL_INIT_VIDEO | SDL_INIT_AUDIO | SDL_INIT_GAMECONTROLLER);
   SDL_Window *window = SDL_CreateWindow ("tinymsx-emu",

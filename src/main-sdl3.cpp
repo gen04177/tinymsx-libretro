@@ -15,9 +15,21 @@ std::vector < uint8_t > loadFile (const std::string & path)
   );
 }
 
+printHelp (void)
+{
+
+  printf
+    ("\n\nTinyMSX-Emu - Running with SDL %d.%d.%d\n",
+     SDL_MAJOR_VERSION, SDL_MINOR_VERSION, SDL_MICRO_VERSION);
+
+}
+
+
 int
 main (int argc, char *argv[])
 {
+  printHelp ();
+
   const int SCREEN_WIDTH = 284;
   const int SCREEN_HEIGHT = 240;
   const int SCALE = 1;

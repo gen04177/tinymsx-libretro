@@ -16,6 +16,14 @@
 #define VIDEO_HEIGHT  240
 #define VIDEO_PITCH   (VIDEO_WIDTH * sizeof(uint16_t))
 
+static const struct retro_variable vars[] = {
+    {
+        "tinymsx_machine_type",
+        "Machine Type; MSX1|MSX1 ASC8|MSX1 ASC8X"
+    },
+    { NULL, NULL }
+};
+
 
 static struct retro_log_callback logging;
 static retro_log_printf_t log_cb;
@@ -31,6 +39,23 @@ static size_t rom_size = 0;
 
 char retro_base_directory[4096];
 char retro_game_path[4096];
+
+static void update_core_options(void)
+{
+    struct retro_variable var = {0};
+
+    var.key = "tinymsx_machine_type";
+
+    if (environ_cb(RETRO_ENVIRONMENT_GET_VARIABLE, &var) && var.value)
+    {
+        if (!strcmp(var.value, "MSX1 ASC8"))
+            tinymsx_type = TINYMSX_TYPE_MSX1_ASC8;
+        else if (!strcmp(var.value, "MSX1 ASC8X"))
+            tinymsx_type = TINYMSX_TYPE_MSX1_ASC8X;
+        else
+            tinymsx_type = TINYMSX_TYPE_MSX1;
+    }
+}
 
 
 static void
@@ -70,6 +95,7 @@ retro_set_environment (retro_environment_t cb)
   };
 
   cb (RETRO_ENVIRONMENT_SET_CONTROLLER_INFO, (void *) ports);
+  cb(RETRO_ENVIRONMENT_SET_VARIABLES, (void*)vars);
 }
 
 void
@@ -96,7 +122,7 @@ retro_get_system_info (struct retro_system_info *info)
 {
   memset (info, 0, sizeof (*info));
   info->library_name = "TinyMSX (MSX)";
-  info->library_version = "0.1";
+  info->library_version = "0.2";
   info->need_fullpath = false;
   info->valid_extensions = "rom";
 }
@@ -235,8 +261,15 @@ retro_load_game (const struct retro_game_info *info)
   fread (bios_data, 1, bios_size, f);
   fclose (f);
 
-  tinymsx_create (rom_data, rom_size, bios_data, bios_size, 0x8000);
-
+tinymsx_create(
+    rom_data,
+    rom_size,
+    bios_data,
+    bios_size,
+    0x8000,
+    tinymsx_type
+);
+	
   free (bios_data);
 
   static const struct retro_input_descriptor desc[] = {
@@ -288,7 +321,7 @@ size_t retro_serialize_size(void)
         return 0;
 
     size_t size = 0;
-    tinymsx_save_state(NULL, &size); // apenas retorna o tamanho
+    tinymsx_save_state(NULL, &size);
     return size;
 }
 

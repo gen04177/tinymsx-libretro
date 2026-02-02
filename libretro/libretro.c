@@ -33,6 +33,7 @@ static retro_video_refresh_t video_cb;
 static retro_audio_sample_batch_t audio_batch_cb;
 static retro_input_poll_t input_poll_cb;
 static retro_input_state_t input_state_cb;
+static int tinymsx_type = TINYMSX_TYPE_MSX1;
 
 static void *rom_data = NULL;
 static size_t rom_size = 0;

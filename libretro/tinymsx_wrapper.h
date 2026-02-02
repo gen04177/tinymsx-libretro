@@ -9,7 +9,8 @@ extern "C" {
 
 void tinymsx_create(const void* rom, size_t romSize,
                     const void* bios, size_t biosSize,
-                    size_t ramSize);
+                    size_t ramSize,
+                    int machine_type);
 void tinymsx_destroy(void);
 
 void tinymsx_run_frame(uint8_t pad1, uint8_t pad2);

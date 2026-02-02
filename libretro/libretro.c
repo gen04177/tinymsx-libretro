@@ -262,6 +262,8 @@ retro_load_game (const struct retro_game_info *info)
   fread (bios_data, 1, bios_size, f);
   fclose (f);
 
+update_core_options();
+
 tinymsx_create(
     rom_data,
     rom_size,

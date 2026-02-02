@@ -1,0 +1,6 @@
+SOURCES_C := \
+    $(CORE_DIR)/libretro.c
+
+SOURCES_CXX := \
+    $(CORE_DIR)/tinymsx_wrapper.cpp \
+    src/tinymsx.cpp

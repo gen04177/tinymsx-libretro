@@ -19,7 +19,8 @@ void tinymsx_set_bios_path(const char* path)
 
 void tinymsx_create(const void* rom, size_t romSize,
                     const void* bios, size_t biosSize,
-                    size_t ramSize)
+                    size_t ramSize,
+                    int machine_type)
 {
     if (msx)
     {
@@ -28,7 +29,7 @@ void tinymsx_create(const void* rom, size_t romSize,
     }
 
     msx = new TinyMSX(
-        TINYMSX_TYPE_MSX1,
+        machine_type,
         rom ? (const uint8_t*)rom : nullptr,
         romSize,
         ramSize,

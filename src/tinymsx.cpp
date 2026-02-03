@@ -26,6 +26,7 @@
  */
 #include "tinymsx.h"
 #include <string.h>
+#include <cctype>
 
 #define MASTER_CLOCK 10738635 // Unused in this emulator
 #define CPU_CLOCK 3579545     // Master Clock div 3

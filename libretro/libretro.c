@@ -19,7 +19,7 @@
 static const struct retro_variable vars[] = {
     {
         "tinymsx_machine_type",
-        "Machine Type; MSX1|MSX1 ASC8|MSX1 ASC8X|SG 1000; Requires Restart"    },
+        "Machine Type (Requires Restart); MSX1|MSX1 ASC8|MSX1 ASC8X|SG 1000"    },
     { NULL, NULL }
 };
 

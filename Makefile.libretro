@@ -43,6 +43,9 @@ else ifneq (,$(findstring osx,$(platform)))
    fpic    := -fPIC
    SHARED  := -dynamiclib
 else ifeq ($(platform), win)
+   CC=x86_64-w64-mingw32-gcc
+   CXX=x86_64-w64-mingw32-g++
+   AR=x86_64-w64-mingw32-ar
    TARGET  := $(TARGET_NAME)_libretro.dll
    SHARED  := -shared -static-libgcc -static-libstdc++ \
               -Wl,--version-script=$(CORE_DIR)/link.T -Wl,--no-undefined

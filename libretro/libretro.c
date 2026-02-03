@@ -19,8 +19,7 @@
 static const struct retro_variable vars[] = {
     {
         "tinymsx_machine_type",
-        "Machine Type; MSX1|MSX1 ASC8|MSX1 ASC8X"
-    },
+        "Machine Type; MSX1|MSX1 ASC8|MSX1 ASC8X|SG 1000; Requires Restart"    },
     { NULL, NULL }
 };
 
@@ -49,7 +48,9 @@ static void update_core_options(void)
 
     if (environ_cb(RETRO_ENVIRONMENT_GET_VARIABLE, &var) && var.value)
     {
-        if (!strcmp(var.value, "MSX1 ASC8"))
+        if (!strcmp(var.value, "SG 1000"))
+            tinymsx_type = TINYMSX_TYPE_SG1000;
+        else if (!strcmp(var.value, "MSX1 ASC8"))
             tinymsx_type = TINYMSX_TYPE_MSX1_ASC8;
         else if (!strcmp(var.value, "MSX1 ASC8X"))
             tinymsx_type = TINYMSX_TYPE_MSX1_ASC8X;
@@ -125,7 +126,7 @@ retro_get_system_info (struct retro_system_info *info)
   info->library_name = "TinyMSX (MSX)";
   info->library_version = "0.2";
   info->need_fullpath = false;
-  info->valid_extensions = "rom";
+  info->valid_extensions = "rom|sg";
 }
 
 void
@@ -245,6 +246,14 @@ retro_load_game (const struct retro_game_info *info)
   rom_data = malloc (rom_size);
   memcpy (rom_data, info->data, rom_size);
 
+  update_core_options();
+
+  void *bios_data = NULL;
+  size_t bios_size = 0;
+
+  if (tinymsx_type != TINYMSX_TYPE_SG1000)
+  {
+
   char bios_path[4096];
   snprintf (bios_path, sizeof (bios_path), "%s/msx1.rom",
 	    retro_base_directory);
@@ -253,16 +262,19 @@ retro_load_game (const struct retro_game_info *info)
   if (!f)
     {
       log_cb (RETRO_LOG_ERROR, "Failed to load BIOS: %s\n", bios_path);
+	  free(rom_data);
+      rom_data = NULL;
+      rom_size = 0;
       return false;
     }
   fseek (f, 0, SEEK_END);
-  size_t bios_size = ftell (f);
+  bios_size = ftell (f);
   fseek (f, 0, SEEK_SET);
-  void *bios_data = malloc (bios_size);
+  bios_data = malloc (bios_size);
   fread (bios_data, 1, bios_size, f);
   fclose (f);
+  }
 
-update_core_options();
 
 tinymsx_create(
     rom_data,
@@ -272,7 +284,8 @@ tinymsx_create(
     0x8000,
     tinymsx_type
 );
-	
+
+ if (bios_data)	
   free (bios_data);
 
   static const struct retro_input_descriptor desc[] = {

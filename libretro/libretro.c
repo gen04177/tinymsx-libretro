@@ -172,10 +172,42 @@ retro_set_input_state (retro_input_state_t cb)
   input_state_cb = cb;
 }
 
-void
-retro_reset (void)
+void retro_reset(void)
 {
-  tinymsx_destroy ();
+    
+    tinymsx_destroy();
+
+    void *bios_data = NULL;
+    size_t bios_size = 0;
+
+    if (tinymsx_type != TINYMSX_TYPE_SG1000)
+    {
+        char bios_path[4096];
+        snprintf(bios_path, sizeof(bios_path), "%s/msx1.rom", retro_base_directory);
+
+        FILE *f = fopen(bios_path, "rb");
+        if (f)
+        {
+            fseek(f, 0, SEEK_END);
+            bios_size = ftell(f);
+            fseek(f, 0, SEEK_SET);
+            bios_data = malloc(bios_size);
+            fread(bios_data, 1, bios_size, f);
+            fclose(f);
+        }
+    }
+
+    tinymsx_create(
+        rom_data,
+        rom_size,
+        bios_data,
+        bios_size,
+        0x8000,
+        tinymsx_type
+    );
+
+    if (bios_data)
+        free(bios_data);
 }
 
 static uint8_t pad1 = 0;

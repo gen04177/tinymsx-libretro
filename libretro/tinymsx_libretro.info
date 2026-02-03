@@ -14,4 +14,4 @@ firmware_count = 1
 firmware0_desc = "msx1.rom (MSX Bios)"
 firmware0_path = "msx1.rom"
 firmware0_opt = "false"
-description = "A test port of the https://github.com/suzukiplan TinyMSX to libretro. This core emulates MSX/SG 1000 8-bit home consoles."
+description = "A port of the https://github.com/suzukiplan TinyMSX to libretro. This core emulates MSX/SG 1000 8-bit home consoles."
